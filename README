@@ -1,0 +1,30 @@
+    USB Wall -- kernel-based security module for USB mass-storage device filtering 
+
+-------------------------------------- Description --------------------------------------
+USB Wall, is a kind of firewall for USB storage device like pen drive and external hard 
+drive. It concerns Linux PC and is developed for network administrators. Thereby, this 
+software can control the access to USB device in order to restrict their use. Indeed, all 
+storage device whose identifier is not accepted by the IT department, will not be allowed 
+to communicate with the user (i.e. the user couldn’t open the key to read, write or 
+execute any files in this device).
+
+Moreover, an interface, used by network administrators, will be added to control the list 
+of allowed keys, also called white list. It permits to register the key’s identifiers in a
+file which contains a list of authorized key’s identifiers.
+
+There are two main objectives:
+
+   > To allow, restrict or forbid the access of a pen drive on Linux PC.
+
+   > To monitor all events about USB activity on the PC Linux as a connection or a 
+     registration of the pen drive, actions between the storage device and PC,…
+
+------------------------------------ State advancement ------------------------------------
+The module can detect any mass storage devices and indentify them why their product id and 
+vendor id.
+
+To use this module you have to remove the usb_storage module.
+
+---------------------------------------- Reference ----------------------------------------
+ldd3 - Linux Device Drivers 3rd
+
