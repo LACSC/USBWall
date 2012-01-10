@@ -1,0 +1,30 @@
+                                 USBWall
+
+-------------------- Requirements before installing --------------------
+
+Get kernel sources : kernel.org or distributor's kernels sources package
+Developed with 
+   > Linux Kernel : version 2.6.32-34
+   > Distribution : Ubuntu 10.04 LTS (Lucid Lynx) 
+
+----------------------------- Installation -----------------------------
+0- Open a linux console
+
+1- Compile the module :
+	> go to the "usball" repertory : cd .../usbwall
+        > run the conpilation : make
+
+2- Insert the module (whit root permission) :
+        > go to the "src" repertory : cd .../usbwall/src
+        > insert the module : insmod usbwall.ko
+
+3- To see usbwall kernel messages 
+        > use : dmesg | grep usbwall  
+
+4- To remove the usb_storage module (whit root permission) :
+	> rmmod usb_storage
+
+5- To remove the usbwall module (whit root permission) :
+	> rmmod usbwall 
+
+
