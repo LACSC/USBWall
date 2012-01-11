@@ -1,13 +1,13 @@
                                  USBWall
 
--------------------- Requirements before installing --------------------
+----------- Requirements before installing -----------
 
 Get kernel sources : kernel.org or distributor's kernels sources package
 Developed with 
    > Linux Kernel : version 2.6.32-34
    > Distribution : Ubuntu 10.04 LTS (Lucid Lynx) 
 
------------------------------ Installation -----------------------------
+----------- Installation -----------
 0- Open a linux console
 
 1- Compile the module :

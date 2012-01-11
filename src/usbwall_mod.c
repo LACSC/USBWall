@@ -49,10 +49,11 @@ MODULE_LICENSE("GPL");
 /*** Storage class code : Mass storage ***/
 #define USB_CLASS_MASS_STORAGE 8
 
-/*** Variables temporary used : white liste ***/
-#define VENDOR_ID_MY_KEY_4GO 0x1970
-#define PRODUCT_ID_MY_KEY_4GO 0x0000
-/* #define SERIAL_NUMBER_MY_KEY_4GO 0x3E462902115024271106 */
+/*** Temporary white liste ***/
+/* My pen drive */
+#define VENDOR_ID_MY_PEN_DRIVE_8GO 0x0930
+#define PRODUCT_ID_MY_PEN_DRIVE_8GO 0x6544
+#define SERIAL_NUMBER_MY_PEN_DRIVE_8GO "001D92DC4AF0C95163A2092C" 
 
 /*** Devices supported by the module : All mass storage ***/
 static struct usb_device_id usbwall_id_table [] = {
@@ -224,11 +225,15 @@ MODULE_DEVICE_TABLE (usb, usbwall_id_table);
 /*** kernel's representation of a USB device ***/
 static struct usb_device * dev;
 
+/*** my variables ***/
+int cmpserialnumber;
+char serialnumber[63] = "";
+
 static int usbwall_open(struct inode *inode, struct file *file)
 {
   DBG_TRACE("the device is not on the white liste");
   return 0;
-  /* return -EPERM; */
+  /* return -EPERM; */ 
 }
 
 /*** Function called by the kernel when a device is detected ***/
@@ -237,11 +242,14 @@ static int usbwall_probe(struct usb_interface *intf, const struct usb_device_id 
   DBG_TRACE("entering in the function probe");
   
   dev = interface_to_usbdev (intf);
+  usb_string(dev, dev->descriptor.iSerialNumber, serialnumber, 63);
+  cmpserialnumber = strcmp(serialnumber, SERIAL_NUMBER_MY_PEN_DRIVE_8GO);
+
   /* Research if the device is on the white list*/
   /* If the device is on the white liste : the module is released */ 
-  if(dev->descriptor.idProduct == PRODUCT_ID_MY_KEY_4GO && 
-     dev->descriptor.idVendor == VENDOR_ID_MY_KEY_4GO  
-     /* && dev->descriptor.iSerialNumber == SERIAL_NUMBER_MY_KEY_4GO */
+  if(dev->descriptor.idProduct == PRODUCT_ID_MY_PEN_DRIVE_8GO && 
+     dev->descriptor.idVendor == VENDOR_ID_MY_PEN_DRIVE_8GO && 
+     cmpserialnumber == 0  
   ){
     DBG_TRACE("the device is on the white liste");
   }
@@ -251,8 +259,8 @@ static int usbwall_probe(struct usb_interface *intf, const struct usb_device_id 
     DBG_TRACE("the device is not on the white liste");
     DBG_TRACE("its idVendor is %x", dev->descriptor.idVendor);
     DBG_TRACE("its idProduct is %x", dev->descriptor.idProduct);
-    /* DBG_TRACE("its SerialNumber is %x", dev->descriptor.iSerialNumber); */
-    /* return -EPERM; */
+    DBG_TRACE("its SerialNumber is %s", serialnumber);
+    /* return -EPERM; */ 
   }
   return 0;
 }
