@@ -11,20 +11,35 @@ Developed with
 0- Open a linux console
 
 1- Compile the module :
-	> go to the "usball" repertory : cd .../usbwall
-        > run the conpilation : make
+	> go to the "usball" repertory : "cd .../usbwall"
+        > run the compilation : "make"
 
 2- Insert the module (whit root permission) :
-        > go to the "src" repertory : cd .../usbwall/src
-        > insert the module : insmod usbwall.ko
+        > go to the "src" directory : "cd .../usbwall/src"
+        > insert the module : "insmod usbwall.ko"
 
-3- To see usbwall kernel messages 
+3- Make character special files
+        > watch a major number in kernel message (a)
+        > make special file : "mknod /dev/usbwall_chardev c a_major_number 0"
+
+4- Compile the load white list program 
+        > go to the "load_white_liste" directory : cd ../usbwall/load_white_liste
+        > run compilation : "make"
+
+5- Run the load white list program
+        > in the same repertory : "./load_white_liste"
+
+
+(a)- To see usbwall kernel messages 
         > use : dmesg | grep usbwall  
 
-4- To remove the usb_storage module (whit root permission) :
+(b)- To remove the usb_storage module (whit root permission) :
 	> rmmod usb_storage
 
-5- To remove the usbwall module (whit root permission) :
+(c)- To remove the usbwall module (whit root permission) :
 	> rmmod usbwall 
 
+(d) - Remove the "usbwall_chardev" file after use (whit root permission) :
+       > go to "dev" directory : cd /dev
+       > remove character special files : rm usbwall_chardev
 

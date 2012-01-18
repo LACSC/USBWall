@@ -20,6 +20,13 @@ The module can detect any mass storage devices and indentify them why their prod
 
 To use this module you have to remove the usb_storage module.
 
+The "load white list" program allows to communicate the white list from the user space to the kernel space.
+
+----------- next work ----------- 
+Finalize the communication between user space and kernel space.
+
+Create an interface to add, delete and view USB storage devices.
+
 ----------- Reference -----------
 ldd3 - Linux Device Drivers 3rd
 
