@@ -12,7 +12,7 @@
  *
  * Started on  Mon Dec  19 9:17:29 2011 David FERNANDES
  *
- * Copyright (C) 2012 - David FERNANDES
+ * Copyright (C) 2011 - David FERNANDES
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -249,8 +249,7 @@ static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id
     my_pen_drive.idSerialNumber[i] = my_idSerialNumber[i];
     i++;
   }
-  /*******************************************************/
-  
+
   dev = interface_to_usbdev (intf);
   usb_string (dev, dev->descriptor.iSerialNumber, serialnumber, 32);
 

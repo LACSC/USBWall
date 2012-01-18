@@ -59,9 +59,4 @@ printk("%s %08u : %04d : %s : " fmt "\n",       \
        __func__,                                \
 ## arg)
 
-/*
-Exemple d'utilisation de la macro:
-DBG_TRACE("trace a ecrire: val=%d\n", val);
-*/
-
 #endif /* !TRACE_H_ */
