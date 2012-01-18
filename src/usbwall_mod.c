@@ -35,8 +35,10 @@
 #include <linux/init.h>
 #include <linux/errno.h>
 #include <linux/usb.h>
+#include <asm/uaccess.h>
 #include "storage.h"
 #include "trace.h"
+#include "mass_storage_info.h"
 
 /* Module informations */
 MODULE_AUTHOR ("David FERNANDES");
@@ -46,18 +48,11 @@ MODULE_LICENSE ("GPL");
 /* Storage class code : Mass storage */
 #define USB_CLASS_MASS_STORAGE 8
 
-/* Temporary white liste */
-/* My pen drive */
-#define VENDOR_ID_MY_PEN_DRIVE_8GO 0x0930
-#define PRODUCT_ID_MY_PEN_DRIVE_8GO 0x6544
-#define SERIAL_NUMBER_MY_PEN_DRIVE_8GO "001D92DC4AF0C95163A2092C"
-
 /**
  * \struct usb_device_id usbwall_id_table []
  *
  * Devices supported by the module : All mass storage
  */
-
 static struct usb_device_id usbwall_id_table[] = {
 
   /* Typically, flash devices : all storage protocol */
@@ -228,11 +223,13 @@ MODULE_DEVICE_TABLE (usb, usbwall_id_table);
 static struct usb_device *dev;
 
 /* my variables */
-int cmpserialnumber;
-char serialnumber[63] = "";
+static char serialnumber[32] = "";
+static char my_idSerialNumber[32] = "001D92DC4AF0C95163A2092C";
+static struct mass_storage_info my_pen_drive;
+static int i, usbwall_register, chardev_register, cmpserialnumber;
 
 /** 
- * \fn usbwall_probe(struct usb_interface *intf, const struct usb_device_id *devid)
+ * \fn usbwall_probe
  * \param *intf usb_interface
  * \param *devid usb_device_id
  * \return -ENOTSUP if the device is on the white liste else 0 
@@ -240,43 +237,52 @@ char serialnumber[63] = "";
  * Function called by the kernel when a device is detected
  */
 static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id *devid)
-{
+{ 
   DBG_TRACE ("entering in the function probe");
 
+  /* Temporary white liste : my pen drive initialization */
+  my_pen_drive.idVendor = 0x0930;
+  my_pen_drive.idProduct =  0x6544;
+  i = 0;
+  while(my_idSerialNumber[i] != '\0')
+  {
+    my_pen_drive.idSerialNumber[i] = my_idSerialNumber[i];
+    i++;
+  }
+  /*******************************************************/
+  
   dev = interface_to_usbdev (intf);
-  usb_string (dev, dev->descriptor.iSerialNumber, serialnumber, 63);
-  cmpserialnumber = strcmp (serialnumber, SERIAL_NUMBER_MY_PEN_DRIVE_8GO);
+  usb_string (dev, dev->descriptor.iSerialNumber, serialnumber, 32);
+
+  cmpserialnumber = strcmp (serialnumber, my_pen_drive.idSerialNumber);
 
   /* Research if the device is on the white list */
   /* If the device is on the white liste : the module is released */
-  if (dev->descriptor.idProduct == PRODUCT_ID_MY_PEN_DRIVE_8GO &&
-      dev->descriptor.idVendor == VENDOR_ID_MY_PEN_DRIVE_8GO &&
+  if (dev->descriptor.idProduct == my_pen_drive.idProduct &&
+      dev->descriptor.idVendor == my_pen_drive.idVendor &&
       cmpserialnumber == 0)
-    {
-      DBG_TRACE ("the device is on the white liste");
-      return -EMEDIUMTYPE;
-    }
+  {
+    DBG_TRACE ("the device is on the white liste");
+    return -EMEDIUMTYPE;
+  }
   /* Else : creation a fake device */
-  else
-    {
-      DBG_TRACE ("the device is not on the white liste");
-      DBG_TRACE ("its idVendor is %x", dev->descriptor.idVendor);
-      DBG_TRACE ("its idProduct is %x", dev->descriptor.idProduct);
-      DBG_TRACE ("its SerialNumber is %s", serialnumber);
-      return 0;
-    }
+  DBG_TRACE ("the device is not on the white liste");
+  DBG_TRACE ("its idVendor is %x", dev->descriptor.idVendor);
+  DBG_TRACE ("its idProduct is %x", dev->descriptor.idProduct);
+  DBG_TRACE ("its SerialNumber is %s", serialnumber);
+
   return 0;
 }
 
 /** 
- * \fn usbwall_disconnect(struct usb_interface *intf)
- * \param *intf usb_interface
+ * \fn usbwall_disconnect
+ * \param  struct usb_interface *intf
  *
  * Function called when a device is desconnected
  */
 static void usbwall_disconnect (struct usb_interface *intf)
 {
-  printk ("Module_usbwall : device disconnected");
+  DBG_TRACE ("device disconnected");
 }
 
 /** 
@@ -291,33 +297,106 @@ static struct usb_driver usbwall_driver = {
   .id_table = usbwall_id_table,
 };
 
+/* char device */
+
+/** 
+ * \fn chardev_open
+ * \param struct inode *inode
+ * \param struct file *file
+ * \return 0 if openning success
+ *
+ * Open charactere device
+ */
+int chardev_open(struct inode *inode, struct file *file)
+{
+  DBG_TRACE("chardev opened");
+  return 0; 
+}
+
+/** 
+ * \fn chardev_release
+ * \param struct inode *inode
+ * \param struct file *file
+ * \return 0 if closing success
+ *
+ * Close charactere device
+ */
+int chardev_release(struct inode *inode, struct file *file)
+{
+  DBG_TRACE("chardev release"); 
+  return 0;
+}
+
+/** 
+ * \fn chardev_ioctl
+ * \param struct inode *inode
+ * \param struct file *file
+ * \param unsigned int command
+ * \param unsigned long argument
+ * \return 0 if closing success
+ *
+ * Close charactere device
+ */
+int chardev_ioctl(struct inode * inode, struct file * file, unsigned int command, unsigned long argument)
+{
+  switch(command){
+    case IO_SET_PENDRIVE:
+       DBG_TRACE("Argument = %lu", argument);
+       break;
+    default : return -ENOTTY;
+  }
+  return 0;
+}
+
+/**
+ * \struct file_operations usbwall_chardev
+ *
+ * Identifies Char Device to usbcore
+ */
+static struct file_operations usbwall_chardev = {
+  .ioctl = chardev_ioctl,
+  .open = chardev_open,
+  .release = chardev_release,
+};
+
 /** 
  * \fn __init usbwall_init
  * \return usbwall_register; O if register success, else error number (register failed). 
  *
- * Loading the module
+ * Loading the module : register USB driver and charactere device
  */
 static int __init usbwall_init (void)
 {
-  int usbwall_register;
+  /* USB driver register*/
   usbwall_register = 0;
   usbwall_register = usb_register (&usbwall_driver);
   if (usbwall_register)
-    {
-      DBG_TRACE ("register failed, error : %d", usbwall_register);
-    }
+  {
+    DBG_TRACE ("Registering usb driver failed, error : %d", usbwall_register);
+  }
+
+  /* Charactere device register*/
+  chardev_register = register_chrdev(0, "usbwall_chardev", &usbwall_chardev);
+  DBG_TRACE ("major number assigned to charactere device is %d", chardev_register);
+  
   DBG_TRACE ("module loaded");
   return usbwall_register;
 }
 
 /** 
- * \fn usbwall_probe(struct usb_interface *intf, const struct usb_device_id *devid)
+ * \fn __exit usbwall_exit (void)
  *
- * Unloading the module
+ * Unloading the module : unregister USB driver and charactere device
  */
 static void __exit usbwall_exit (void)
 {
+
+  /* USB driver unregister*/
   usb_deregister (&usbwall_driver);
+  
+  /* Charactere device unregister*/
+  unregister_chrdev(chardev_register, "usbwall_chardev");
+
   DBG_TRACE ("module unloaded");
 }
 
