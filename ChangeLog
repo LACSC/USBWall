@@ -1,0 +1,76 @@
+commit 978f867bbefd556177430de5f8da0d4e95b5da1b
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Jan 19 16:51:14 2012 +0100
+
+    deleted usbwall test app from this repository. Now has its own
+
+commit fe213ea166a7b49d6f812781adbd0583fd5c6a3a
+Author: Philippe Thierry <phil@reseau-desktop.(none)>
+Date:   Thu Jan 19 16:41:12 2012 +0100
+
+    updated doc Makefile. Functionnal.
+
+commit ca596a2b2d9905103d0989c8646c146089fa3e4b
+Author: Philippe Thierry <phil@reseau-desktop.(none)>
+Date:   Thu Jan 19 16:39:11 2012 +0100
+
+    add doxygen support. Add loads of updates.
+    
+    Replacing char dev with procfs node
+    Add first release of list management in module
+    Add procfs write code to add/del key from userspace
+    Updated shared header to new header name: usbwall.h, which is now installed in /usr/include/linux/usb/usbwall.h
+
+commit 2c8867ebd8f5b5cf3294e8b0f2f268d422d47450
+Author: Philippe Thierry <phil@reseau-desktop.(none)>
+Date:   Thu Jan 19 16:27:34 2012 +0100
+
+    updated access rights of all files
+
+commit 2ab9966d4d330dd685a44bd682833504b56a9993
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Wed Jan 18 15:56:17 2012 +0100
+
+    Install & Readme update
+
+commit e3a311ff3880033be70297b6efa2434ab8b03963
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Wed Jan 18 14:57:04 2012 +0100
+
+    white list update
+
+commit d7fd8646ab4ec19ec96e4f7ccfdade127841cd7a
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Wed Jan 18 14:53:43 2012 +0100
+
+    add load white list program
+
+commit d58ff3fdff79dc7e21077a58318454d6ae4ef2b4
+Author: Fernandes David <dfernand@ece.fr>
+Date:   Wed Jan 18 14:31:53 2012 +0100
+
+    mass_storage_info added
+
+commit e5e876e7c9c70a3e71102fbb19dd7eed0da735ee
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sun Jan 15 12:57:04 2012 +0100
+
+    Doxygen updating
+
+commit 6253961ab3e49232fd5b75bffbd874e5b524af73
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Wed Jan 11 16:27:28 2012 +0100
+
+    update : getting serial number
+
+commit b1b3db240c622ea7218615a21c97be8d840c221d
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Tue Jan 10 12:46:20 2012 +0100
+
+    second commit
+
+commit bf50626a0998a2ea71c9adc3bf2057e8c3d94d41
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Tue Jan 10 12:39:03 2012 +0100
+
+    first commit
