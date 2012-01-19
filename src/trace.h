@@ -38,7 +38,7 @@
 
 #define DBG_PREFIX "usbwall:"
 
-unsigned int dbgline = 0;
+unsigned int dbgline_get_and_inc(void);
 
 /* INFO: thanks to Jean-Marc LACROIX for this macro */
 /*
@@ -54,7 +54,7 @@ unsigned int dbgline = 0;
 #define DBG_TRACE(fmt, arg...)                  \
 printk("%s %08u : %04d : %s : " fmt "\n",       \
        DBG_PREFIX,                              \
-       dbgline++,		                \
+       dbgline_get_and_inc(),	                \
        __LINE__,                                \
        __func__,                                \
 ## arg)
