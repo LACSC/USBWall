@@ -47,6 +47,7 @@
 MODULE_AUTHOR ("David FERNANDES");
 MODULE_DESCRIPTION ("Module for USB mass-storage device filtering");
 MODULE_LICENSE ("GPL");
+MODULE_VERSION (USBWALL_MODVERSION);
 
 /**
  * \struct usb_device_id usbwall_id_table []
