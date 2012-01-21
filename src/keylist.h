@@ -39,6 +39,8 @@
 #include "usbwall.h"
 #include <linux/list.h>
 
+int     key_add_first_element(struct mass_storage_info*		keyinfo);
+
 int	key_add(struct mass_storage_info*	keyinfo);
 
 int	key_del(struct mass_storage_info*	keyinfo);

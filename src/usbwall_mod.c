@@ -40,6 +40,7 @@
 #include <linux/usb/ch9.h>
 #include "trace.h"
 #include "usbwall.h"
+#include "keylist.h"
 #include "procfs_iface.h"
 
 
@@ -64,10 +65,9 @@ MODULE_DEVICE_TABLE (usb, usbwall_id_table);
 static struct usb_device *dev;
 
 /* my variables */
-static char serialnumber[32] = "";
-static char my_idSerialNumber[32] = "001D92DC4AF0C95163A2092C";
-static struct mass_storage_info my_pen_drive;
-static int usbwall_register, cmpserialnumber;
+static char idSerialNumber[32] = "";
+static struct mass_storage_info my_device;
+static int usbwall_register;
 
 /** 
  * \fn usbwall_probe
@@ -79,37 +79,32 @@ static int usbwall_register, cmpserialnumber;
  */
 static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id *devid)
 {
-  int i;
+  int authorized;
+  
   DBG_TRACE ("entering in the function probe");
 
-  /* Temporary white liste : my pen drive initialization */
-  i = 0;
-  while(my_idSerialNumber[i] != '\0')
-  {
-    my_pen_drive.idSerialNumber[i] = my_idSerialNumber[i];
-    i++;
-  }
-
   dev = interface_to_usbdev (intf);
-  usb_string (dev, dev->descriptor.iSerialNumber, serialnumber, 32);
+  usb_string (dev, dev->descriptor.iSerialNumber, idSerialNumber, 32);
+    
+  my_device.idVendor = dev->descriptor.idVendor;
+  my_device.idProduct = dev->descriptor.idProduct;
+  strcpy(my_device.idSerialNumber, idSerialNumber);
 
-  cmpserialnumber = strcmp (serialnumber, my_pen_drive.idSerialNumber);
+  DBG_TRACE ("the device introduce is");
+  DBG_TRACE ("idVendor : %x", my_device.idVendor);
+  DBG_TRACE ("idProduct : %x", my_device.idProduct);
+  DBG_TRACE ("SerialNumber : %s", my_device.idSerialNumber);
 
   /* Research if the device is on the white list */
   /* If the device is on the white liste : the module is released */
-  if (dev->descriptor.idProduct == my_pen_drive.idProduct &&
-      dev->descriptor.idVendor == my_pen_drive.idVendor &&
-      cmpserialnumber == 0)
-  {
+  authorized = is_key_authorized(&my_device);
+  if(authorized == 0)
+  { 
     DBG_TRACE ("the device is on the white liste");
     return -EMEDIUMTYPE;
   }
   /* Else : creation a fake device */
-  DBG_TRACE ("the device is not on the white liste");
-  DBG_TRACE ("its idVendor is %x", dev->descriptor.idVendor);
-  DBG_TRACE ("its idProduct is %x", dev->descriptor.idProduct);
-  DBG_TRACE ("its SerialNumber is %s", serialnumber);
-
+  DBG_TRACE ("the device isn't on the white liste");
   return 0;
 }
 

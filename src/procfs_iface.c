@@ -84,18 +84,19 @@ static int usbwall_keyctrl_write(struct file* file,
               u_keyinfo.info.idSerialNumber);
     if ((u_keyinfo.info.keyflags & USBWALL_KEY_ADD)) {
       DBG_TRACE("adding key %s to whitelist", u_keyinfo.info.idSerialNumber);
-      key_add(&(u_keyinfo.info));
+      /* key_add(&(u_keyinfo.info)); */
+      key_add_first_element(&(u_keyinfo.info));
+      DBG_TRACE("first key add");
     }
    if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
       DBG_TRACE("deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
       key_del(&(u_keyinfo.info));
     }
+
     /* MOD_DEC_USE_COUNT; */
 
     return len;
 }
-
-
 
 /*!
  ** \fn usbwall_proc_init

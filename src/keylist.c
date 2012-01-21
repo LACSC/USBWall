@@ -36,12 +36,21 @@
 #include <linux/list.h>
 #include "usbwall.h"
 
-static LIST_HEAD(keys_list);
+static struct list_head key_list_head;
+static struct mass_storage_info* keyinfo_lastadd;
+
+int     key_add_first_element(struct mass_storage_info*	keyinfo) 
+{
+  INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
+  list_add(&keyinfo->list, &key_list_head); /* Insert struct afert the head */
+  keyinfo_lastadd = keyinfo;
+  return 0;
+}
 
 int	key_add(struct mass_storage_info*	keyinfo)
 {
-/*  INIT_LIST_HEAD(... keyinfo);*/
-  /*list_add(keyinfo, keys_list);*/
+  list_add(&keyinfo->list, &keyinfo_lastadd->list); /* Insert struct afert the last element */
+  keyinfo_lastadd = keyinfo;
   return 0;
 }
 
@@ -55,3 +64,4 @@ int	is_key_authorized(struct mass_storage_info*	keyinfo)
 {
   return 0;
 }
+
