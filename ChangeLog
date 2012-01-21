@@ -1,3 +1,15 @@
+commit 3334c7db90456ebd190af4c489bc419121aeaad3
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sat Jan 21 15:11:43 2012 +0100
+
+    add first element in list, check if the device is on the white list
+
+commit 71d10f999b2051d694976554a5e4666d0683b188
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Jan 19 16:52:02 2012 +0100
+
+    add ChangeLog file
+
 commit 978f867bbefd556177430de5f8da0d4e95b5da1b
 Author: Philippe Thierry <thierry@ece.fr>
 Date:   Thu Jan 19 16:51:14 2012 +0100
