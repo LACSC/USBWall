@@ -1,3 +1,15 @@
+commit 542bd82109dd725aaca6c1201c29a63b66c10abf
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sun Jan 22 17:16:48 2012 +0100
+
+    add keylist_info.h
+
+commit 27adea0cab5175378f9a7e90bfa9ea260af922d7
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sun Jan 22 16:26:52 2012 +0100
+
+    update ChangeLog
+
 commit beeb6d051b3e227921ada1f2094c807e5a6fc869
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Sun Jan 22 16:24:14 2012 +0100
