@@ -1,11 +1,11 @@
 /**
- * \file mass_storage_info.h
+ * \file usbwall.h
  * \brief structure to store information of mass storages
  * \author David FERNANDES
  * \version 0.1
  * \date 10 january 2012
  *
- * File mass_storage_info.h for project usbwall
+ * File usbwall.h for project usbwall
  *
  * Made by David FERNANDES
  * Login   <dfernand@ece.fr>
@@ -56,7 +56,7 @@ typedef enum keyflags keyflags_t;
  *
  * mass storage indentification
  */
-struct mass_storage_info
+struct usbwall_token_info
 {
   keyflags_t keyflags;
   uint16_t idVendor;
@@ -66,7 +66,7 @@ struct mass_storage_info
 
 union procfs_info
 {
-  struct mass_storage_info info;
+  struct usbwall_token_info info;
   char   buffer[64];
 };
 

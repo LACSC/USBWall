@@ -36,15 +36,15 @@
 #ifndef KEYLIST_H_
 #define KEYLIST_H_
 
-#include "usbwall.h"
+#include "keylist_info.h"
 #include <linux/list.h>
 
-int     key_add_first_element(struct mass_storage_info*		keyinfo);
+int     key_add_first_element(struct internal_token_info*		keyinfo);
 
-int	key_add(struct mass_storage_info*	keyinfo);
+int	key_add(struct internal_token_info*	keyinfo);
 
-int	key_del(struct mass_storage_info*	keyinfo);
+int	key_del(struct internal_token_info*	keyinfo);
 
-int	is_key_authorized(struct mass_storage_info*	keyinfo);
+int	is_key_authorized(struct internal_token_info*	keyinfo);
 
 #endif /*! KEYLIST_H_*/

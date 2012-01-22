@@ -44,6 +44,7 @@
 #include "trace.h"
 #include "usbwall.h"
 #include "keylist.h"
+#include "keylist_info.h"
 
 #define USBWALL_PROC_STATUS_BUFFER_SIZE 256
 #define USBWALL_PROC_RELEASE_BUFFER_SIZE 16
@@ -73,6 +74,7 @@ static int usbwall_keyctrl_write(struct file* file,
 {
     int len;
     procfs_info_t u_keyinfo;
+    static struct internal_token_info internal_keyinfo;
     /* struct fb_data_t *fb_data = (struct fb_data_t *)data; */
 
     /* MOD_INC_USE_COUNT; */
@@ -90,15 +92,21 @@ static int usbwall_keyctrl_write(struct file* file,
 	      u_keyinfo.info.idVendor,
               u_keyinfo.info.idProduct,
               u_keyinfo.info.idSerialNumber);
+
+    /* copy information to internal_keyinfo */
+    internal_keyinfo.info.idVendor = u_keyinfo.info.idVendor;
+    internal_keyinfo.info.idProduct = u_keyinfo.info.idProduct;
+    strcpy(internal_keyinfo.info.idSerialNumber, u_keyinfo.info.idSerialNumber);
+
     if ((u_keyinfo.info.keyflags & USBWALL_KEY_ADD)) {
       DBG_TRACE("adding key %s to whitelist", u_keyinfo.info.idSerialNumber);
       /* key_add(&(u_keyinfo.info)); */
-      key_add_first_element(&(u_keyinfo.info));
+      key_add_first_element(&(internal_keyinfo));
       DBG_TRACE("first key add");
     }
    if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
       DBG_TRACE("deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
-      key_del(&(u_keyinfo.info));
+      key_del(&(internal_keyinfo));
     }
 
     /* MOD_DEC_USE_COUNT; */
