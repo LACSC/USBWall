@@ -42,7 +42,7 @@
 #include "usbwall.h"
 #include "keylist.h"
 #include "procfs_iface.h"
-
+#include "keylist_info.h"
 
 /* Module informations */
 MODULE_AUTHOR ("David FERNANDES");
@@ -66,7 +66,7 @@ static struct usb_device *dev;
 
 /* my variables */
 static char idSerialNumber[32] = "";
-static struct mass_storage_info my_device;
+static struct internal_token_info my_device;
 static int usbwall_register;
 
 /** 
@@ -86,14 +86,14 @@ static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id
   dev = interface_to_usbdev (intf);
   usb_string (dev, dev->descriptor.iSerialNumber, idSerialNumber, 32);
     
-  my_device.idVendor = dev->descriptor.idVendor;
-  my_device.idProduct = dev->descriptor.idProduct;
-  strcpy(my_device.idSerialNumber, idSerialNumber);
+  my_device.info.idVendor = dev->descriptor.idVendor;
+  my_device.info.idProduct = dev->descriptor.idProduct;
+  strcpy(my_device.info.idSerialNumber, idSerialNumber);
 
   DBG_TRACE ("the device introduce is");
-  DBG_TRACE ("idVendor : %x", my_device.idVendor);
-  DBG_TRACE ("idProduct : %x", my_device.idProduct);
-  DBG_TRACE ("SerialNumber : %s", my_device.idSerialNumber);
+  DBG_TRACE ("idVendor : %x", my_device.info.idVendor);
+  DBG_TRACE ("idProduct : %x", my_device.info.idProduct);
+  DBG_TRACE ("SerialNumber : %s", my_device.info.idSerialNumber);
 
   /* Research if the device is on the white list */
   /* If the device is on the white liste : the module is released */

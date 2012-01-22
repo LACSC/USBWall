@@ -33,13 +33,15 @@
 **
 */
 
+
 #include <linux/list.h>
+#include "keylist_info.h"
 #include "usbwall.h"
 
 static struct list_head key_list_head;
-static struct mass_storage_info* keyinfo_lastadd;
+static struct internal_token_info* keyinfo_lastadd;
 
-int     key_add_first_element(struct mass_storage_info*	keyinfo) 
+int     key_add_first_element(struct internal_token_info*	keyinfo) 
 {
   INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
   list_add(&keyinfo->list, &key_list_head); /* Insert struct afert the head */
@@ -47,20 +49,20 @@ int     key_add_first_element(struct mass_storage_info*	keyinfo)
   return 0;
 }
 
-int	key_add(struct mass_storage_info*	keyinfo)
+int	key_add(struct internal_token_info*	keyinfo)
 {
   list_add(&keyinfo->list, &keyinfo_lastadd->list); /* Insert struct afert the last element */
   keyinfo_lastadd = keyinfo;
   return 0;
 }
 
-int	key_del(struct mass_storage_info*	keyinfo)
+int	key_del(struct internal_token_info*	keyinfo)
 {
-  /*list_del(keyinfo, keys_list);*/
+  list_del(&keyinfo->list); /* Delete struct */
   return 0;
 }
 
-int	is_key_authorized(struct mass_storage_info*	keyinfo)
+int	is_key_authorized(struct internal_token_info*	keyinfo)
 {
   return 0;
 }
