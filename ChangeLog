@@ -1,3 +1,15 @@
+commit bb1d5a9872971cefaa7aa1b4df06e00aeabf32d3
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sun Jan 22 11:22:04 2012 +0100
+
+    deletion deprrecated files
+
+commit 8ca12142bf5357f6e44326fc3a75d379ff76d5ff
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sat Jan 21 15:12:33 2012 +0100
+
+    ChangeLog updated
+
 commit 3334c7db90456ebd190af4c489bc419121aeaad3
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Sat Jan 21 15:11:43 2012 +0100
