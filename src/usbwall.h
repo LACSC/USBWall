@@ -62,7 +62,6 @@ struct mass_storage_info
   uint16_t idVendor;
   uint16_t idProduct;
   char idSerialNumber[32];
-  struct list_head list;
 };
 
 union procfs_info
