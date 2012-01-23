@@ -33,37 +33,65 @@
 **
 */
 
-
 #include <linux/list.h>
 #include "keylist_info.h"
 #include "usbwall.h"
+#include "trace.h"
 
 static struct list_head key_list_head;
-static struct internal_token_info* keyinfo_lastadd;
-
-int     key_add_first_element(struct internal_token_info*	keyinfo) 
-{
-  INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
-  list_add(&keyinfo->list, &key_list_head); /* Insert struct afert the head */
-  keyinfo_lastadd = keyinfo;
-  return 0;
-}
+static struct internal_token_info* keyinfo_tmp;
+static int listempty = 0;
 
 int	key_add(struct internal_token_info*	keyinfo)
 {
-  list_add(&keyinfo->list, &keyinfo_lastadd->list); /* Insert struct afert the last element */
-  keyinfo_lastadd = keyinfo;
+  if(listempty == 0)
+  {
+    INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
+    list_add(&keyinfo->list, &key_list_head); /* Insert struct after the head */
+    //keyinfo_lastadd = keyinfo;
+  }
+  else
+  {
+    list_add(&keyinfo->list, &key_list_head); /* Insert struct after the last element */;
+    //keyinfo_lastadd = keyinfo;
+  }
+  listempty++;
   return 0;
 }
 
 int	key_del(struct internal_token_info*	keyinfo)
 {
-  list_del(&keyinfo->list); /* Delete struct */
-  return 0;
+  if(listempty != 0)
+  {
+    list_del(&keyinfo->list); /* Delete struct */
+    listempty--;
+    return 0;
+  }
+  else
+  {
+    DBG_TRACE ("error : the list is empty");
+    return 1;
+  }
 }
 
 int	is_key_authorized(struct internal_token_info*	keyinfo)
 {
-  return 0;
+  if(listempty != 0)
+  {
+    list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
+    { 
+      DBG_TRACE ("Vendor list %x, Product list %x", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct);
+      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && keyinfo->info.idProduct == keyinfo_tmp->info.idProduct)
+      {
+        return 0;
+      } 
+    }
+    return 1;
+  }
+  else
+  {
+    DBG_TRACE ("error : the list is empty");
+    return 1;
+  }
 }
 

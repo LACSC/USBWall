@@ -39,8 +39,6 @@
 #include "keylist_info.h"
 #include <linux/list.h>
 
-int     key_add_first_element(struct internal_token_info*		keyinfo);
-
 int	key_add(struct internal_token_info*	keyinfo);
 
 int	key_del(struct internal_token_info*	keyinfo);

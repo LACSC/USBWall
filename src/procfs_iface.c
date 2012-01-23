@@ -48,7 +48,7 @@
 
 static struct proc_dir_entry* usbwalldir = NULL;
 static struct proc_dir_entry* usbwallkeyctrl = NULL;
-
+static int nb_element = 0;
 /*!
  ** \fn write_func
  ** 
@@ -91,14 +91,14 @@ static int usbwall_keyctrl_write(struct file* file,
     strcpy(internal_keyinfo.info.idSerialNumber, u_keyinfo.info.idSerialNumber);
 
     if ((u_keyinfo.info.keyflags & USBWALL_KEY_ADD)) {
-      DBG_TRACE("adding key %s to whitelist", u_keyinfo.info.idSerialNumber);
-      /* key_add(&(u_keyinfo.info)); */
-      key_add_first_element(&(internal_keyinfo));
-      DBG_TRACE("first key add");
+      DBG_TRACE("n°%d adding key %s to whitelist", nb_element, u_keyinfo.info.idSerialNumber);
+      key_add(&(internal_keyinfo));
+      nb_element++;
     }
-   if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
+    if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
       DBG_TRACE("deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
       key_del(&(internal_keyinfo));
+      nb_element--;
     }
 
     /* MOD_DEC_USE_COUNT; */
