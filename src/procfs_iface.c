@@ -46,8 +46,16 @@
 #include "keylist.h"
 #include "keylist_info.h"
 
+#define USBWALL_PROC_STATUS_BUFFER_SIZE 256
+#define USBWALL_PROC_RELEASE_BUFFER_SIZE 16
+
 static struct proc_dir_entry* usbwalldir = NULL;
 static struct proc_dir_entry* usbwallkeyctrl = NULL;
+static struct proc_dir_entry* usbwallstatus = NULL;
+static struct proc_dir_entry* usbwallrelease = NULL;
+
+static char status_buffer[USBWALL_PROC_STATUS_BUFFER_SIZE];
+static char release_buffer[USBWALL_PROC_RELEASE_BUFFER_SIZE];
 
 static int nb_element = 0;
 
@@ -109,9 +117,112 @@ static int usbwall_keyctrl_write(struct file* file,
 }
 
 /*!
- ** \fn usbwall_proc_init
+ ** \brief usbwall_status_read
  ** 
- ** \return 
+ ** \param page the kernel mapped memory page in which the data should be copied
+ ** \param start unused
+ ** \param off the current string offset asked by the userspace (if read in multiple times)
+ ** \param count the asked bytes count to read
+ ** \param eof EOF signal pointer to be setted
+ ** \param data unused
+ ** 
+ ** \return the number of effectively copied bytes
+ */
+int usbwall_status_read(char *page,
+                        char **start,
+                        off_t off,
+                        int count,
+                        int *eof,
+                        void *data)
+{
+   int is_eof = 0;
+
+   DBG_TRACE("entering status read, asking for reading %d bytes. Current offset is %ld", count, off);
+   /*
+   ** test buffer by now
+   */
+   sprintf(status_buffer, "USBWall module release %s\n", USBWALL_MODVERSION);
+   if (off >= strlen(status_buffer)) {
+     DBG_TRACE("offset greater than string size, leaving");
+     count = 0;
+     is_eof = 1;
+     goto end;
+   }
+   if (count > (strlen(status_buffer) - off)) {
+     count = (strlen(status_buffer) - off + 1);
+     is_eof = 1;
+   }
+   snprintf(&(page[off]), count, &(status_buffer[off]));
+
+end:
+   if (is_eof) {
+     DBG_TRACE("EOF=1");
+     /* update file offset */
+      *eof = 1;
+   } else {
+      *eof = 0;
+   }
+   DBG_TRACE("end of function. Returning %d", count);
+   return count;
+}
+
+/*!
+ ** \brief usbwall_release_read
+ **
+ ** Return the module release identifier, in order to be checked by the libusbwall to guarantee the interoperability
+ ** 
+ ** \param page the kernel mapped memory page in which the data should be copied
+ ** \param start unused
+ ** \param off the current string offset asked by the userspace (if read in multiple times)
+ ** \param count the asked bytes count to read
+ ** \param eof EOF signal pointer to be setted
+ ** \param data unused
+ ** 
+ ** \return the number of effectively copied bytes
+ */
+int usbwall_release_read(char *page,
+                         char **start,
+                         off_t off,
+                         int count,
+                         int *eof,
+                         void *data)
+{
+   int is_eof = 0;
+
+   DBG_TRACE("entering release read, asking for reading %d bytes. Current offset is %ld", count, off);
+   /*
+   ** return the release code
+   */
+   sprintf(release_buffer, "%d", USBWALL_MAJOR << 16 | USBWALL_MEDIUM << 8 | USBWALL_CURRENT);
+   if (off >= strlen(release_buffer)) {
+     DBG_TRACE("offset greater than string size, leaving");
+     count = 0;
+     is_eof = 1;
+     goto end;
+   }
+   if (count > (strlen(release_buffer) - off)) {
+     count = (strlen(release_buffer) - off + 1);
+     is_eof = 1;
+   }
+   snprintf(&(page[off]), count, &(release_buffer[off]));
+
+end:
+   if (is_eof) {
+     DBG_TRACE("EOF=1");
+     /* update file offset */
+      *eof = 1;
+   } else {
+      *eof = 0;
+   }
+   DBG_TRACE("end of function. Returning %d", count);
+   return count;
+}
+
+
+/*!
+ ** \fn usbwall_proc_init initialize the usbwall procfs itnerface
+ ** 
+ ** \return 1 if init failed, or 0.
  */
 int usbwall_proc_init()
 {
@@ -123,10 +234,26 @@ int usbwall_proc_init()
     if (usbwallkeyctrl == NULL) {
 	goto fail_proc_entry;
     }
+    usbwallstatus = create_proc_entry("status", 0400, usbwalldir);
+    if (usbwallstatus == NULL) {
+	goto fail_proc_entry_2;
+    }
+    usbwallrelease = create_proc_entry("release", 0400, usbwalldir);
+    if (usbwallrelease == NULL) {
+	goto fail_proc_entry_3;
+    }
+
+
     usbwallkeyctrl->write_proc = usbwall_keyctrl_write;
+    usbwallstatus->read_proc = usbwall_status_read;
+    usbwallrelease->read_proc = usbwall_release_read;
     return 0;
 
 /* failure management - std linux usage */
+fail_proc_entry_3:
+    remove_proc_entry("release", usbwalldir);
+fail_proc_entry_2:
+    remove_proc_entry("status", usbwalldir);
 fail_proc_entry:
     remove_proc_entry("usbwall", NULL);
 fail_proc_mkdir:
@@ -134,10 +261,12 @@ fail_proc_mkdir:
 }
 
 /*!
- ** \fn usbwall_proc_release
+ ** \fn usbwall_proc_release release the usbwall procfs interface
  */
 void usbwall_proc_release()
 {
+    remove_proc_entry("release", usbwalldir);
+    remove_proc_entry("status", usbwalldir);
     remove_proc_entry("key_ctrl", usbwalldir);
     remove_proc_entry("usbwall", NULL);
 }

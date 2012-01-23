@@ -32,6 +32,12 @@
 #ifndef USBWALL_H_
 #define USBWALL_H_
 
+#define USBWALL_MAJOR 0
+#define USBWALL_MEDIUM 2
+#define USBWALL_CURRENT 1
+
+#define USBWALL_MODVERSION "0.2.1"
+
 enum keyflags
 {
   USBWALL_KEY_ADD = 0x1 << 0,
