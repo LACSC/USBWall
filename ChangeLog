@@ -1,3 +1,15 @@
+commit e9ef3f9629f9d826a63bc0bc535a5023cc190efe
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Mon Jan 23 17:09:34 2012 +0100
+
+    bug in keylist.c file when we use the "list_for_each_entry" function
+
+commit beba93a6a85107ecc778ba357c981c0f96422819
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Sun Jan 22 17:17:56 2012 +0100
+
+    update changlog
+
 commit 542bd82109dd725aaca6c1201c29a63b66c10abf
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Sun Jan 22 17:16:48 2012 +0100
