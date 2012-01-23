@@ -48,7 +48,9 @@
 
 static struct proc_dir_entry* usbwalldir = NULL;
 static struct proc_dir_entry* usbwallkeyctrl = NULL;
+
 static int nb_element = 0;
+
 /*!
  ** \fn write_func
  ** 
