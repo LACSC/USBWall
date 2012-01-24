@@ -34,6 +34,8 @@
 */
 
 #include <linux/list.h>
+#include <linux/slab.h>
+#include "keylist.h"
 #include "keylist_info.h"
 #include "usbwall.h"
 #include "trace.h"
@@ -42,56 +44,79 @@ static struct list_head key_list_head;
 static struct internal_token_info* keyinfo_tmp;
 static int listempty = 0;
 
+
 int	key_add(struct internal_token_info*	keyinfo)
 {
-  if(listempty == 0)
-  {
-    INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
-    list_add(&keyinfo->list, &key_list_head); /* Insert struct after the head */
-    //keyinfo_lastadd = keyinfo;
+  if(list_empty(&(key_list_head))) {
+    DBG_TRACE("Empty list! Adding first key");
   }
-  else
-  {
-    list_add(&keyinfo->list, &key_list_head); /* Insert struct after the last element */;
-    //keyinfo_lastadd = keyinfo;
-  }
+  DBG_TRACE("Adding key %s to keylist", keyinfo->info.idSerialNumber);
+  list_add_tail(&keyinfo->list, &key_list_head); /* Insert struct after the last element */;
   listempty++;
   return 0;
 }
 
 int	key_del(struct internal_token_info*	keyinfo)
 {
-  if(listempty != 0)
+  if(!list_empty(&(key_list_head)))
   {
-    list_del(&keyinfo->list); /* Delete struct */
-    listempty--;
+    list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
+    {
+      
+      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor &&
+         keyinfo->info.idProduct == keyinfo_tmp->info.idProduct)
+      {
+        list_del(&(keyinfo_tmp->list)); /* Delete struct */
+        kfree(keyinfo_tmp);
+        kfree(keyinfo);
+        break;
+      }
+    }
     return 0;
   }
   else
   {
-    DBG_TRACE ("error : the list is empty");
-    return 1;
+    DBG_TRACE("Empty list! Initializing internal keylist");
+    return -EFAULT;
   }
 }
 
 int	is_key_authorized(struct internal_token_info*	keyinfo)
 {
-  if(listempty != 0)
+  if(!list_empty(&(key_list_head)))
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
     { 
       DBG_TRACE ("Vendor list %x, Product list %x", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct);
       if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && keyinfo->info.idProduct == keyinfo_tmp->info.idProduct)
       {
-        return 0;
+        return 1;
       } 
     }
-    return 1;
+    return 0;
   }
   else
   {
     DBG_TRACE ("error : the list is empty");
-    return 1;
+    return 0;
   }
 }
 
+int keylist_init()
+{
+  DBG_TRACE("initialize key list");
+  INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
+  return 0;
+}
+
+void keylist_release()
+{
+  if (!list_empty(&(key_list_head))) {
+    list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
+    {
+      list_del(&(keyinfo_tmp->list));
+      kfree(keyinfo_tmp);
+    }
+  }
+  DBG_TRACE("release keylist");
+}

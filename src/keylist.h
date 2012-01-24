@@ -45,4 +45,8 @@ int	key_del(struct internal_token_info*	keyinfo);
 
 int	is_key_authorized(struct internal_token_info*	keyinfo);
 
+int keylist_init(void);
+
+void keylist_release(void);
+
 #endif /*! KEYLIST_H_*/

@@ -38,8 +38,9 @@
 #include <linux/init.h>
 #include <linux/proc_fs.h>
 #include <linux/sched.h>
-#include <asm/uaccess.h>
 #include <linux/version.h>
+#include <linux/slab.h>
+#include <asm/uaccess.h>
 #include "procfs_iface.h"
 #include "trace.h"
 #include "usbwall.h"
@@ -76,9 +77,14 @@ static int usbwall_keyctrl_write(struct file* file,
 {
     int len;
     procfs_info_t u_keyinfo;
-    static struct internal_token_info internal_keyinfo;
+    //static 
+    struct internal_token_info *internal_keyinfo = NULL;
     /* struct fb_data_t *fb_data = (struct fb_data_t *)data; */
 
+    internal_keyinfo = kmalloc(sizeof(struct internal_token_info),GFP_KERNEL);
+    if (internal_keyinfo == NULL) {
+        return -ENOMEM;
+    }
     /* MOD_INC_USE_COUNT; */
     if(count > sizeof(procfs_info_t))
         len = sizeof(procfs_info_t);
@@ -96,18 +102,19 @@ static int usbwall_keyctrl_write(struct file* file,
               u_keyinfo.info.idSerialNumber);
 
     /* copy information to internal_keyinfo */
-    internal_keyinfo.info.idVendor = u_keyinfo.info.idVendor;
-    internal_keyinfo.info.idProduct = u_keyinfo.info.idProduct;
-    strcpy(internal_keyinfo.info.idSerialNumber, u_keyinfo.info.idSerialNumber);
+    internal_keyinfo->info.idVendor = u_keyinfo.info.idVendor;
+    internal_keyinfo->info.idProduct = u_keyinfo.info.idProduct;
+    strcpy(internal_keyinfo->info.idSerialNumber, u_keyinfo.info.idSerialNumber);
 
     if ((u_keyinfo.info.keyflags & USBWALL_KEY_ADD)) {
       DBG_TRACE("n°%d adding key %s to whitelist", nb_element, u_keyinfo.info.idSerialNumber);
-      key_add(&(internal_keyinfo));
+      //key_add(&(internal_keyinfo));
+      key_add(internal_keyinfo);
       nb_element++;
-    }
-    if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
+    } else if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
       DBG_TRACE("deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
-      key_del(&(internal_keyinfo));
+      //key_del(&(internal_keyinfo));
+      key_del(internal_keyinfo);
       nb_element--;
     }
 

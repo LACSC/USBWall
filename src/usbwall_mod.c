@@ -80,7 +80,6 @@ static int usbwall_register;
  */
 static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id *devid)
 {
-  int authorized;
   
   DBG_TRACE ("entering in the function probe");
 
@@ -98,8 +97,7 @@ static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id
 
   /* Research if the device is on the white list */
   /* If the device is on the white liste : the module is released */
-  authorized = is_key_authorized(&my_device);
-  if(authorized == 0)
+  if(is_key_authorized(&my_device))
   { 
     DBG_TRACE ("the device is on the white liste");
     return -EMEDIUMTYPE;
@@ -149,6 +147,7 @@ static int __init usbwall_init (void)
     DBG_TRACE ("Registering usb driver failed, error : %d", usbwall_register);
   }
   usbwall_proc_init();
+  keylist_init(); 
   DBG_TRACE ("module loaded");
   return usbwall_register;
 }
@@ -160,7 +159,7 @@ static int __init usbwall_init (void)
  */
 static void __exit usbwall_exit (void)
 {
-
+  keylist_release();
   usbwall_proc_release();
   /* USB driver unregister*/
   usb_deregister (&usbwall_driver);
