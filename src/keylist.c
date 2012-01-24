@@ -41,7 +41,7 @@
 #include "trace.h"
 
 static struct list_head key_list_head;
-static struct internal_token_info* keyinfo_tmp;
+static struct internal_token_info* keyinfo_tmp, *tmp;
 static int listempty = 0;
 
 
@@ -57,14 +57,16 @@ int	key_add(struct internal_token_info*	keyinfo)
 }
 
 int	key_del(struct internal_token_info*	keyinfo)
-{
+{ 
+  int idSerialNumber_cmp;
   if(!list_empty(&(key_list_head)))
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
     {
-      
-      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor &&
-         keyinfo->info.idProduct == keyinfo_tmp->info.idProduct)
+      idSerialNumber_cmp = strcmp(keyinfo_tmp->info.idSerialNumber, keyinfo->info.idSerialNumber);
+      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && 
+         keyinfo->info.idProduct == keyinfo_tmp->info.idProduct &&
+         idSerialNumber_cmp == 0)
       {
         list_del(&(keyinfo_tmp->list)); /* Delete struct */
         kfree(keyinfo_tmp);
@@ -83,12 +85,16 @@ int	key_del(struct internal_token_info*	keyinfo)
 
 int	is_key_authorized(struct internal_token_info*	keyinfo)
 {
+  int idSerialNumber_cmp;
   if(!list_empty(&(key_list_head)))
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
     { 
       DBG_TRACE ("Vendor list %x, Product list %x", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct);
-      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && keyinfo->info.idProduct == keyinfo_tmp->info.idProduct)
+      idSerialNumber_cmp = strcmp(keyinfo_tmp->info.idSerialNumber, keyinfo->info.idSerialNumber);
+      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && 
+         keyinfo->info.idProduct == keyinfo_tmp->info.idProduct &&
+         idSerialNumber_cmp == 0)
       {
         return 1;
       } 
@@ -112,7 +118,7 @@ int keylist_init()
 void keylist_release()
 {
   if (!list_empty(&(key_list_head))) {
-    list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
+    list_for_each_entry_safe(keyinfo_tmp, tmp, &key_list_head, list) /* Get each item */
     {
       list_del(&(keyinfo_tmp->list));
       kfree(keyinfo_tmp);

@@ -99,11 +99,11 @@ static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id
   /* If the device is on the white liste : the module is released */
   if(is_key_authorized(&my_device))
   { 
-    DBG_TRACE ("the device is on the white liste");
+    DBG_TRACE ("the device is on the white list");
     return -EMEDIUMTYPE;
   }
   /* Else : creation a fake device */
-  DBG_TRACE ("the device isn't on the white liste");
+  DBG_TRACE ("the device isn't on the white list");
   return 0;
 }
 
