@@ -1,3 +1,34 @@
+commit c3ceee9ec4a076ac0381de06601224ede931db9f
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Tue Jan 24 18:52:54 2012 +0100
+
+    fixed bug rmmod, add tests in functions "authorize" and "del keyinfo", adding license file
+
+commit 6b93085ac5961045340a582052aaab0352b4c521
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Tue Jan 24 10:58:39 2012 +0100
+
+    add & del key bug fixed
+
+commit 4e99dcaeb1834c8a740729befa8d4859108fb4fe
+Merge: 662b23a ba8fb71
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Mon Jan 23 17:40:50 2012 +0100
+
+    Merge branch 'master' of ../tmp/usbwall
+
+commit 662b23add6b7b5c1fbfa1ef85921728073549324
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Mon Jan 23 17:37:06 2012 +0100
+
+    update to merge
+
+commit 55dd7f9c3d12bf981dc77757438e68412f9791f9
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Mon Jan 23 17:15:47 2012 +0100
+
+    update ChangLog
+
 commit e9ef3f9629f9d826a63bc0bc535a5023cc190efe
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Mon Jan 23 17:09:34 2012 +0100
@@ -16,6 +47,13 @@ Date:   Sun Jan 22 17:16:48 2012 +0100
 
     add keylist_info.h
 
+commit ba8fb7133b30cca975f71dc2724304fd1138138d
+Merge: d99ebee 27adea0
+Author: Philippe Thierry <phil@reseau-libre.net>
+Date:   Sun Jan 22 17:10:39 2012 +0100
+
+    Merge branch 'master' of git://github.com/DavidFernandes/USBWall
+
 commit 27adea0cab5175378f9a7e90bfa9ea260af922d7
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Sun Jan 22 16:26:52 2012 +0100
@@ -30,11 +68,25 @@ Date:   Sun Jan 22 16:24:14 2012 +0100
     update fonction key_del
     add intanal structure for list
 
+commit d99ebee38c9146b7ee78df571bc59be0fc37a3f6
+Merge: 92c0fb2 d04a7ef
+Author: Philippe Thierry <phil@reseau-libre.net>
+Date:   Sun Jan 22 15:35:14 2012 +0100
+
+    Merge branch 'master' of git://github.com/DavidFernandes/USBWall
+
 commit d04a7ef00e16a85d398708226dd08e40557573a0
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Sun Jan 22 14:51:30 2012 +0100
 
     remove list_head
+
+commit 92c0fb252a9c3499454a1401aa91b51ad571e9e1
+Merge: 40aa211 5421abd
+Author: Philippe Thierry <phil@reseau-libre.net>
+Date:   Sun Jan 22 12:24:24 2012 +0100
+
+    merge from last David update. Add a node for numeric coded release for valiation check in libusbwall init.
 
 commit 5421abd7751c69db8bd5cba41ee5ef86513243b6
 Author: David Fernandes <dfernand@ece.fr>
@@ -59,6 +111,12 @@ Author: David Fernandes <dfernand@ece.fr>
 Date:   Sat Jan 21 15:11:43 2012 +0100
 
     add first element in list, check if the device is on the white list
+
+commit 40aa21106d33504e5f1fa78fd14234b7b96b057a
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Fri Jan 20 16:26:56 2012 +0100
+
+    add support for status node in procfs.
 
 commit 71d10f999b2051d694976554a5e4666d0683b188
 Author: Philippe Thierry <thierry@ece.fr>
