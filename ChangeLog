@@ -1,3 +1,15 @@
+commit f60a4728f1a74d7184f4f95848ea55d802f25427
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Wed Jan 25 15:52:08 2012 +0100
+
+    status, read key list
+
+commit 7b922f735617334f12bb7fc1c6056edfcb385052
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Tue Jan 24 19:00:40 2012 +0100
+
+    update ChangeLog
+
 commit c3ceee9ec4a076ac0381de06601224ede931db9f
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Tue Jan 24 18:52:54 2012 +0100
