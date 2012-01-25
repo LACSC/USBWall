@@ -90,7 +90,7 @@ int	is_key_authorized(struct internal_token_info*	keyinfo)
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
     { 
-      DBG_TRACE ("Vendor list %x, Product list %x", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct);
+      DBG_TRACE ("Vendor list %x, Product list %x, Serial Number list %s", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct, keyinfo_tmp->info.idSerialNumber);
       idSerialNumber_cmp = strcmp(keyinfo_tmp->info.idSerialNumber, keyinfo->info.idSerialNumber);
       if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && 
          keyinfo->info.idProduct == keyinfo_tmp->info.idProduct &&
@@ -106,6 +106,19 @@ int	is_key_authorized(struct internal_token_info*	keyinfo)
     DBG_TRACE ("error : the list is empty");
     return 0;
   }
+}
+
+void 	print_keylist(char* status_buffer)
+{
+  int nb_key = 0;
+  if(!list_empty(&(key_list_head)))
+  {
+    list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
+    { 
+      sprintf(status_buffer, "Key : %d\tidVendor : %x\tidProduct : %x\tSerial Number : %s\n", nb_key, keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct, keyinfo_tmp->info.idSerialNumber);
+      nb_key++;
+    }
+  } 
 }
 
 int keylist_init()

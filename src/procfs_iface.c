@@ -77,7 +77,7 @@ static int usbwall_keyctrl_write(struct file* file,
 {
     int len;
     procfs_info_t u_keyinfo;
-    //static 
+   
     struct internal_token_info *internal_keyinfo = NULL;
     /* struct fb_data_t *fb_data = (struct fb_data_t *)data; */
 
@@ -149,6 +149,7 @@ int usbwall_status_read(char *page,
    ** test buffer by now
    */
    sprintf(status_buffer, "USBWall module release %s\n", USBWALL_MODVERSION);
+   print_keylist(status_buffer);
    if (off >= strlen(status_buffer)) {
      DBG_TRACE("offset greater than string size, leaving");
      count = 0;
