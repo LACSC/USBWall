@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** File trace.h for project usbwall
 **
 ** Made by Philippe THIERRY
