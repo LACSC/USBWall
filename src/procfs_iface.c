@@ -90,13 +90,13 @@ static int usbwall_keyctrl_write(struct file* file,
         len = sizeof(procfs_info_t);
     else
         len = count;
-    DBG_TRACE("reading %ld len from userspace", count);
+    DBG_TRACE(DBG_LEVEL_DEBUG, "reading %ld len from userspace", count);
     if(copy_from_user(u_keyinfo.buffer, buffer, len)) {
         /* MOD_DEC_USE_COUNT; */
         return -EFAULT;
     }
     u_keyinfo.buffer[len] = '\0';
-    DBG_TRACE("reading: vendor: %x, product: %x, serial: %s",
+    DBG_TRACE(DBG_LEVEL_NOTICE, "reading: vendor: %x, product: %x, serial: %s",
 	      u_keyinfo.info.idVendor,
               u_keyinfo.info.idProduct,
               u_keyinfo.info.idSerialNumber);
@@ -107,12 +107,12 @@ static int usbwall_keyctrl_write(struct file* file,
     strcpy(internal_keyinfo->info.idSerialNumber, u_keyinfo.info.idSerialNumber);
 
     if ((u_keyinfo.info.keyflags & USBWALL_KEY_ADD)) {
-      DBG_TRACE("nÂ°%d adding key %s to whitelist", nb_element, u_keyinfo.info.idSerialNumber);
+      DBG_TRACE(DBG_LEVEL_INFO, "°%d adding key %s to whitelist", nb_element, u_keyinfo.info.idSerialNumber);
       //key_add(&(internal_keyinfo));
       key_add(internal_keyinfo);
       nb_element++;
     } else if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
-      DBG_TRACE("deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
+      DBG_TRACE(DBG_LEVEL_INFO, "deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
       //key_del(&(internal_keyinfo));
       key_del(internal_keyinfo);
       nb_element--;
@@ -144,14 +144,14 @@ int usbwall_status_read(char *page,
 {
    int is_eof = 0;
 
-   DBG_TRACE("entering status read, asking for reading %d bytes. Current offset is %ld", count, off);
+   DBG_TRACE(DBG_LEVEL_DEBUG, "entering status read, asking for reading %d bytes. Current offset is %ld", count, off);
    /*
    ** test buffer by now
    */
    sprintf(status_buffer, "USBWall module release %s\n", USBWALL_MODVERSION);
    print_keylist(status_buffer);
    if (off >= strlen(status_buffer)) {
-     DBG_TRACE("offset greater than string size, leaving");
+     DBG_TRACE(DBG_LEVEL_WARNING, "offset greater than string size, leaving");
      count = 0;
      is_eof = 1;
      goto end;
@@ -164,13 +164,13 @@ int usbwall_status_read(char *page,
 
 end:
    if (is_eof) {
-     DBG_TRACE("EOF=1");
+     DBG_TRACE(DBG_LEVEL_DEBUG, "EOF=1");
      /* update file offset */
       *eof = 1;
    } else {
       *eof = 0;
    }
-   DBG_TRACE("end of function. Returning %d", count);
+   DBG_TRACE(DBG_LEVEL_DEBUG, "end of function. Returning %d", count);
    return count;
 }
 
@@ -197,13 +197,13 @@ int usbwall_release_read(char *page,
 {
    int is_eof = 0;
 
-   DBG_TRACE("entering release read, asking for reading %d bytes. Current offset is %ld", count, off);
+   DBG_TRACE(DBG_LEVEL_DEBUG, "entering release read, asking for reading %d bytes. Current offset is %ld", count, off);
    /*
    ** return the release code
    */
    sprintf(release_buffer, "%d", USBWALL_MAJOR << 16 | USBWALL_MEDIUM << 8 | USBWALL_CURRENT);
    if (off >= strlen(release_buffer)) {
-     DBG_TRACE("offset greater than string size, leaving");
+     DBG_TRACE(DBG_LEVEL_WARNING, "offset greater than string size, leaving");
      count = 0;
      is_eof = 1;
      goto end;
@@ -216,13 +216,13 @@ int usbwall_release_read(char *page,
 
 end:
    if (is_eof) {
-     DBG_TRACE("EOF=1");
+     DBG_TRACE(DBG_LEVEL_DEBUG, "EOF=1");
      /* update file offset */
       *eof = 1;
    } else {
       *eof = 0;
    }
-   DBG_TRACE("end of function. Returning %d", count);
+   DBG_TRACE(DBG_LEVEL_DEBUG, "end of function. Returning %d", count);
    return count;
 }
 

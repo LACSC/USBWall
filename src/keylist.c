@@ -48,23 +48,23 @@ static int listempty = 0;
 int	key_add(struct internal_token_info*	keyinfo)
 {
   if(list_empty(&(key_list_head))) {
-    DBG_TRACE("Empty list! Adding first key");
+    DBG_TRACE(DBG_LEVEL_NOTICE, "Empty list! Adding first key");
   }
-  DBG_TRACE("Adding key %s to keylist", keyinfo->info.idSerialNumber);
+  DBG_TRACE(DBG_LEVEL_INFO, "Adding key %s to keylist", keyinfo->info.idSerialNumber);
   list_add_tail(&keyinfo->list, &key_list_head); /* Insert struct after the last element */;
   listempty++;
   return 0;
 }
 
 int	key_del(struct internal_token_info*	keyinfo)
-{ 
+{
   int idSerialNumber_cmp;
   if(!list_empty(&(key_list_head)))
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
     {
       idSerialNumber_cmp = strcmp(keyinfo_tmp->info.idSerialNumber, keyinfo->info.idSerialNumber);
-      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && 
+      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  &&
          keyinfo->info.idProduct == keyinfo_tmp->info.idProduct &&
          idSerialNumber_cmp == 0)
       {
@@ -78,7 +78,7 @@ int	key_del(struct internal_token_info*	keyinfo)
   }
   else
   {
-    DBG_TRACE("Empty list! Initializing internal keylist");
+    DBG_TRACE(DBG_LEVEL_ERROR, "Empty list! Initializing internal keylist");
     return -EFAULT;
   }
 }
@@ -89,41 +89,42 @@ int	is_key_authorized(struct internal_token_info*	keyinfo)
   if(!list_empty(&(key_list_head)))
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
-    { 
-      DBG_TRACE ("Vendor list %x, Product list %x, Serial Number list %s", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct, keyinfo_tmp->info.idSerialNumber);
+    {
+      DBG_TRACE (DBG_LEVEL_NOTICE, "Vendor list %x, Product list %x, Serial Number list %s", keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct, keyinfo_tmp->info.idSerialNumber);
       idSerialNumber_cmp = strcmp(keyinfo_tmp->info.idSerialNumber, keyinfo->info.idSerialNumber);
-      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  && 
+      if(keyinfo->info.idVendor == keyinfo_tmp->info.idVendor  &&
          keyinfo->info.idProduct == keyinfo_tmp->info.idProduct &&
          idSerialNumber_cmp == 0)
       {
+        DBG_TRACE (DBG_LEVEL_INFO, "Corresponding usb mass storage device found in list. Authorization granted.");
         return 1;
-      } 
+      }
     }
     return 0;
   }
   else
   {
-    DBG_TRACE ("error : the list is empty");
+    DBG_TRACE (DBG_LEVEL_ERROR, "error : the list is empty");
     return 0;
   }
 }
 
-void 	print_keylist(char* status_buffer)
+void	print_keylist(char* status_buffer)
 {
   int nb_key = 0;
   if(!list_empty(&(key_list_head)))
   {
     list_for_each_entry(keyinfo_tmp, &key_list_head, list) /* Get each item */
-    { 
+    {
       sprintf(status_buffer, "Key : %d\tidVendor : %x\tidProduct : %x\tSerial Number : %s\n", nb_key, keyinfo_tmp->info.idVendor, keyinfo_tmp->info.idProduct, keyinfo_tmp->info.idSerialNumber);
       nb_key++;
     }
-  } 
+  }
 }
 
 int keylist_init()
 {
-  DBG_TRACE("initialize key list");
+  DBG_TRACE(DBG_LEVEL_INFO, "initialize key list");
   INIT_LIST_HEAD(&key_list_head); /* Initialize the list */
   return 0;
 }
@@ -137,5 +138,5 @@ void keylist_release()
       kfree(keyinfo_tmp);
     }
   }
-  DBG_TRACE("release keylist");
+  DBG_TRACE(DBG_LEVEL_INFO, "release keylist");
 }

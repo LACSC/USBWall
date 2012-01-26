@@ -80,30 +80,29 @@ static int usbwall_register;
  */
 static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id *devid)
 {
-  
-  DBG_TRACE ("entering in the function probe");
+  DBG_TRACE (DBG_LEVEL_DEBUG, "entering in the function probe");
 
   dev = interface_to_usbdev (intf);
   usb_string (dev, dev->descriptor.iSerialNumber, idSerialNumber, 32);
-    
+
   my_device.info.idVendor = dev->descriptor.idVendor;
   my_device.info.idProduct = dev->descriptor.idProduct;
   strcpy(my_device.info.idSerialNumber, idSerialNumber);
 
-  DBG_TRACE ("the device introduce is");
-  DBG_TRACE ("idVendor : %x", my_device.info.idVendor);
-  DBG_TRACE ("idProduct : %x", my_device.info.idProduct);
-  DBG_TRACE ("SerialNumber : %s", my_device.info.idSerialNumber);
+  DBG_TRACE (DBG_LEVEL_INFO, "the device introduced has the following info");
+  DBG_TRACE (DBG_LEVEL_INFO, "idVendor : %x", my_device.info.idVendor);
+  DBG_TRACE (DBG_LEVEL_INFO, "idProduct : %x", my_device.info.idProduct);
+  DBG_TRACE (DBG_LEVEL_INFO, "SerialNumber : %s", my_device.info.idSerialNumber);
 
   /* Research if the device is on the white list */
   /* If the device is on the white liste : the module is released */
   if(is_key_authorized(&my_device))
-  { 
-    DBG_TRACE ("the device is on the white list");
+  {
+    DBG_TRACE (DBG_LEVEL_INFO, "the device is on the white list");
     return -EMEDIUMTYPE;
   }
   /* Else : creation a fake device */
-  DBG_TRACE ("the device isn't on the white list");
+  DBG_TRACE (DBG_LEVEL_INFO, "the device isn't on the white list");
   return 0;
 }
 
@@ -115,7 +114,7 @@ static int usbwall_probe (struct usb_interface *intf, const struct usb_device_id
  */
 static void usbwall_disconnect (struct usb_interface *intf)
 {
-  DBG_TRACE ("device disconnected");
+  DBG_TRACE (DBG_LEVEL_INFO, "device disconnected");
 }
 
 /** 
@@ -144,11 +143,11 @@ static int __init usbwall_init (void)
   usbwall_register = usb_register (&usbwall_driver);
   if (usbwall_register)
   {
-    DBG_TRACE ("Registering usb driver failed, error : %d", usbwall_register);
+    DBG_TRACE (DBG_LEVEL_ERROR, "Registering usb driver failed, error : %d", usbwall_register);
   }
   usbwall_proc_init();
-  keylist_init(); 
-  DBG_TRACE ("module loaded");
+  keylist_init();
+  DBG_TRACE (DBG_LEVEL_INFO, "module loaded");
   return usbwall_register;
 }
 
@@ -163,7 +162,7 @@ static void __exit usbwall_exit (void)
   usbwall_proc_release();
   /* USB driver unregister*/
   usb_deregister (&usbwall_driver);
-  DBG_TRACE ("module unloaded");
+  DBG_TRACE (DBG_LEVEL_INFO, "module unloaded");
 }
 
 module_init (usbwall_init);

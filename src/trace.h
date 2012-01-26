@@ -36,7 +36,18 @@
 #ifndef TRACE_H_
 # define TRACE_H_
 
+enum dbg_level {
+  DBG_LEVEL_NONE = 0,
+  DBG_LEVEL_ERROR,
+  DBG_LEVEL_WARNING,
+  DBG_LEVEL_INFO,
+  DBG_LEVEL_NOTICE,
+  DBG_LEVEL_DEBUG
+};
+
 #define DBG_PREFIX "usbwall:"
+
+short dbglevel_get(void);
 
 unsigned int dbgline_get_and_inc(void);
 
@@ -51,12 +62,14 @@ unsigned int dbgline_get_and_inc(void);
 ** Please note that debug message is under control of dbg_count_line
 ** dbg_trace 00000058 : 0300 : dummy_get_stats : enter device net_0
 */
-#define DBG_TRACE(fmt, arg...)                  \
+#define DBG_TRACE(dbg, fmt, arg...)             \
+if (dbglevel_get() >= dbg) {                    \
 printk("%s %08u : %04d : %s : " fmt "\n",       \
        DBG_PREFIX,                              \
        dbgline_get_and_inc(),	                \
        __LINE__,                                \
        __func__,                                \
-## arg)
+## arg);                                        \
+}
 
 #endif /* !TRACE_H_ */

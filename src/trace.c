@@ -33,7 +33,21 @@
 **
 */
 
+#include <linux/module.h>
+#include <linux/moduleparam.h>
+#include "trace.h"
+
+static short dbglevel = 0;
+
+module_param(dbglevel, short, 0640);
+MODULE_PARM_DESC(dbglevel, "Module debug level, from 0 (no debug) to 5 (full debug)");
+
 static unsigned int dbgline = 0;
+
+short dbglevel_get(void)
+{
+  return dbglevel;
+}
 
 unsigned int dbgline_get_and_inc(void)
 {
