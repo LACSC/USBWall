@@ -1,3 +1,15 @@
+commit 41e05a511efb49a54f63f6bd3ba9eca41d4dbcde
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Fri Jan 27 11:56:43 2012 +0100
+
+    update USBwall informations
+
+commit 0a20543f5053e678737aa9e9b384ae2233d19535
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Fri Jan 27 11:08:21 2012 +0100
+
+    update ChangeLog
+
 commit 7b8b56f67e9d0a8a5e500eff1374352246f949f1
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Fri Jan 27 11:07:30 2012 +0100
