@@ -18,17 +18,23 @@ Developed with
         > go to the "src" directory : "cd .../usbwall/src"
         > insert the module : "insmod usbwall.ko"
 
-3- Make character special files
-        > watch a major number in kernel message (a)
-        > make special file : "mknod /dev/usbwall_chardev c a_major_number 0"
+2- Compile & configure the library :
+	> go to the "usball_lib" repertory : "cd .../usbwall_lib"
+        > rnu configuration : "./configure"
+        > run the compilation : "make"
+        > install : sudo make install
 
-4- Compile the load white list program 
-        > go to the "load_white_liste" directory : cd ../usbwall/load_white_liste
+3- Compile test applications 
+        > go to the "usbwall_testapp" directory : cd ../usbwall_testapp
         > run compilation : "make"
 
-5- Run the load white list program
-        > in the same repertory : "./load_white_liste"
+4- Create white list : run the create white list application
+        > go to the "src" directory : cd ../usbwall_testapp/src
+        > run application : "./load_white_liste"
 
+5- Charge white list : run the load white list application
+        > run application : "./load_white_liste"
+        
 
 (a)- To see usbwall kernel messages 
         > use : dmesg | grep usbwall  
@@ -38,8 +44,4 @@ Developed with
 
 (c)- To remove the usbwall module (whit root permission) :
 	> rmmod usbwall 
-
-(d) - Remove the "usbwall_chardev" file after use (whit root permission) :
-       > go to "dev" directory : cd /dev
-       > remove character special files : rm usbwall_chardev
 

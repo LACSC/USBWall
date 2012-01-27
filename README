@@ -18,14 +18,20 @@ There are two main objectives:
 ----------- State advancement -----------
 The module can detect any mass storage devices and indentify them why their product id, vendor id and serial number (thanks to these three identifiers, we can confirm (so sure) the USB mass-storage device's identity.
 
-To use this module you have to remove the usb_storage module.
+To use this module first you have to remove the usb_storage module.
 
+The "create white list" to be able to add mass storage ids in the white list.
 The "load white list" program allows to communicate the white list from the user space to the kernel space.
 
------------ next work ----------- 
-Finalize the communication between user space and kernel space.
+The communication between user space and kernel space is made by a procfs.
 
-Create an interface to add, delete and view USB storage devices.
+The abstract library is functional.
+
+----------- In progress ----------- 
+Create a graphical interface.
+
+----------- Next work ----------- 
+Implemented network element
 
 ----------- Reference -----------
 ldd3 - Linux Device Drivers 3rd
