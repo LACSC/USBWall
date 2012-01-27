@@ -1,3 +1,15 @@
+commit 7b8b56f67e9d0a8a5e500eff1374352246f949f1
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Fri Jan 27 11:07:30 2012 +0100
+
+    name update
+
+commit bb6c7cba8448164aef054c9c35f184bfe4cc597c
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Wed Jan 25 15:52:53 2012 +0100
+
+    update ChangeLog
+
 commit f60a4728f1a74d7184f4f95848ea55d802f25427
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Wed Jan 25 15:52:08 2012 +0100
