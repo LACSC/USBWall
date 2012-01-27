@@ -6,6 +6,8 @@
  * \date 22 january 2012
  *
  * File keylist_info.h for project usbwall
+ * 
+ * LACSC - ECE PARIS Engineering school 
  *
  * Made by David FERNANDES
  * Login   <dfernand@ece.fr>

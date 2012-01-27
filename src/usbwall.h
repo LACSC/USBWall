@@ -7,6 +7,8 @@
  *
  * File usbwall.h for project usbwall
  *
+ * LACSC - ECE PARIS Engineering school 
+ *
  * Made by David FERNANDES
  * Login   <dfernand@ece.fr>
  *
