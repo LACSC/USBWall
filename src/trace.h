@@ -1,5 +1,7 @@
 /*
 ** File trace.h for project usbwall
+** 
+** LACSC - ECE PARIS Engineering school 
 **
 ** Made by Philippe THIERRY
 ** Login   <t0090690@reseau-libre.net>
