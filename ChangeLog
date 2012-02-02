@@ -1,3 +1,28 @@
+commit 0967739b1d27c93ccbe7d7c206b1dd61d522b266
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 11:20:25 2012 +0100
+
+    add depmod (native install). Add support for chrdev ioctl (add and del key). Add single concurrent access to device (simple method).
+
+commit 5f885f7f64797938cee3e07e8587fcafb0bca3f5
+Merge: 57a2ad2 8398563
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 10:36:35 2012 +0100
+
+    merging trace
+
+commit 57a2ad24c40daf298080ed3cca305a01cfba2445
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 10:29:18 2012 +0100
+
+    add control car device /dev/usball support. Need to add some real content in open/ioctl/close and single access support
+
+commit 8398563f5bd9a9ae74fd33efb9927cd97852437e
+Author: David Fernandes <dfernand@ece.fr>
+Date:   Fri Jan 27 11:58:58 2012 +0100
+
+    update ChangeLog
+
 commit 41e05a511efb49a54f63f6bd3ba9eca41d4dbcde
 Author: David Fernandes <dfernand@ece.fr>
 Date:   Fri Jan 27 11:56:43 2012 +0100
@@ -15,6 +40,18 @@ Author: David Fernandes <dfernand@ece.fr>
 Date:   Fri Jan 27 11:07:30 2012 +0100
 
     name update
+
+commit efe745b5fbbde52a6c9ef256717d023138ef37bb
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Jan 26 14:02:28 2012 +0100
+
+    add DBG_LEVEL support (through dbglevel module option. This permit to manage correctly the module log level
+
+commit 31bb1039155d55177b71318c560e3a8d27fa2af8
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Jan 26 10:52:45 2012 +0100
+
+    purge misplaced char in trace submodule.
 
 commit bb6c7cba8448164aef054c9c35f184bfe4cc597c
 Author: David Fernandes <dfernand@ece.fr>
