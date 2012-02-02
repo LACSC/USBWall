@@ -45,8 +45,10 @@
 */
 # define USBWALL_IOC_MAGIC		'u'
 
-# define USBWALL_ADDKEY		_IOW(USBWALL_IOC_MAGIC, 0, long) /* pointer */
-# define USBWALL_DELKEY		_IOW(USBWALL_IOC_MAGIC, 1, long) /* pointer */
+# define USBWALL_IO_ADDKEY		_IOW(USBWALL_IOC_MAGIC, 0, long) /* pointer */
+# define USBWALL_IO_DELKEY		_IOW(USBWALL_IOC_MAGIC, 1, long) /* pointer */
+
+#define USBWALL_IO_MAX			2
 
 enum keyflags
 {

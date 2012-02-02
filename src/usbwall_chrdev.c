@@ -69,8 +69,11 @@ usbwall_chrdev_open(struct inode		*inode __attribute__((unused)),
                     struct file		*filp)
 {
   struct context *ctx = NULL;
+
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Entering open");
   /* simple (need to be updated) support for single access */
   if (open_count != 0) {
+    DBG_TRACE(DBG_LEVEL_ERROR, "Device busy, check lsof");
     return -EBUSY;
   }
   ctx = kmalloc(sizeof(struct context), GFP_KERNEL);
@@ -80,6 +83,7 @@ usbwall_chrdev_open(struct inode		*inode __attribute__((unused)),
   }
   filp->private_data = (void*)ctx;
   open_count += 1;
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving open");
   return 0;
 }
 
@@ -93,41 +97,62 @@ usbwall_chrdev_ioctl(
                   unsigned long	arg)
 {
   struct internal_token_info *internal_keyinfo = NULL;
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Entering ioctl");
 
   switch (cmd) {
-    case USBWALL_ADDKEY || USBWALL_DELKEY:
-      internal_keyinfo = kmalloc(sizeof(internal_keyinfo),GFP_KERNEL);
-      if (internal_keyinfo == NULL) {
-          DBG_TRACE(DBG_LEVEL_ERROR, "net enough memory to add key");
-          goto err_nomem;
-      }
-      DBG_TRACE(DBG_LEVEL_DEBUG, "reading %ld len from userspace", sizeof(internal_keyinfo));
-      if(copy_from_user(&(internal_keyinfo->info), (struct usbwall_key_info*)arg, sizeof(struct usbwall_token_info))) {
-          /* MOD_DEC_USE_COUNT; */
-          DBG_TRACE(DBG_LEVEL_ERROR, "bad argument: unable to get back content from userspace");
-          goto err_badarg;
-      }
-      DBG_TRACE(DBG_LEVEL_NOTICE, "reading: vendor: %x, product: %x, serial: %s",
-                internal_keyinfo->info.idVendor,
-                internal_keyinfo->info.idProduct,
-                internal_keyinfo->info.idSerialNumber);
-      if (cmd == USBWALL_ADDKEY) {
+      case USBWALL_IO_ADDKEY:
+          internal_keyinfo = kmalloc(sizeof(internal_keyinfo),GFP_KERNEL);
+          if (internal_keyinfo == NULL) {
+              DBG_TRACE(DBG_LEVEL_ERROR, "net enough memory to add key");
+              goto err_nomem;
+          }
+          DBG_TRACE(DBG_LEVEL_DEBUG, "reading %ld len from userspace", sizeof(internal_keyinfo));
+          if(copy_from_user(&(internal_keyinfo->info), (struct usbwall_key_info*)arg, sizeof(struct usbwall_token_info))) {
+              /* MOD_DEC_USE_COUNT; */
+              DBG_TRACE(DBG_LEVEL_ERROR, "bad argument: unable to get back content from userspace");
+              goto err_badarg;
+          }
+          DBG_TRACE(DBG_LEVEL_NOTICE, "reading: vendor: %x, product: %x, serial: %s",
+                    internal_keyinfo->info.idVendor,
+                    internal_keyinfo->info.idProduct,
+                    internal_keyinfo->info.idSerialNumber);
           key_add(internal_keyinfo);
-      } else {
+          break;
+
+      case USBWALL_IO_DELKEY:
+          internal_keyinfo = kmalloc(sizeof(internal_keyinfo),GFP_KERNEL);
+          if (internal_keyinfo == NULL) {
+              DBG_TRACE(DBG_LEVEL_ERROR, "net enough memory to add key");
+              goto err_nomem;
+          }
+          DBG_TRACE(DBG_LEVEL_DEBUG, "reading %ld len from userspace", sizeof(internal_keyinfo));
+          if(copy_from_user(&(internal_keyinfo->info), (struct usbwall_key_info*)arg, sizeof(struct usbwall_token_info))) {
+              /* MOD_DEC_USE_COUNT; */
+              DBG_TRACE(DBG_LEVEL_ERROR, "bad argument: unable to get back content from userspace");
+              goto err_badarg;
+          }
+          DBG_TRACE(DBG_LEVEL_NOTICE, "reading: vendor: %x, product: %x, serial: %s",
+                    internal_keyinfo->info.idVendor,
+                    internal_keyinfo->info.idProduct,
+                    internal_keyinfo->info.idSerialNumber);
           key_del(internal_keyinfo);
           kfree(internal_keyinfo);
-      }
-      break;
-    default:
-      goto err_cmd;
+          break;
+
+      default:
+          goto err_cmd;
   }
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl");
   return 0;
 
 err_cmd:
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error INVAL");
   return -EINVAL;
 err_nomem:
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error NOMEM");
   return -ENOMEM;
 err_badarg:
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error FAULT");
   kfree(internal_keyinfo);
   return -EFAULT;
 }

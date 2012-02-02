@@ -53,77 +53,12 @@
 #define USBWALL_PROC_RELEASE_BUFFER_SIZE 16
 
 static struct proc_dir_entry* usbwalldir = NULL;
-static struct proc_dir_entry* usbwallkeyctrl = NULL;
 static struct proc_dir_entry* usbwallstatus = NULL;
 static struct proc_dir_entry* usbwallrelease = NULL;
 
 static char status_buffer[USBWALL_PROC_STATUS_BUFFER_SIZE];
 static char release_buffer[USBWALL_PROC_RELEASE_BUFFER_SIZE];
 
-static int nb_element = 0;
-
-/*!
- ** \fn write_func
- ** 
- ** \param file 
- ** \param buffer 
- ** \param count 
- ** \param data 
- ** 
- ** \return 
- */
-static int usbwall_keyctrl_write(struct file* file,
-                                 const char* buffer,
-                                 unsigned long count,
-                                 void* data)
-{
-    int len;
-    procfs_info_t u_keyinfo;
-
-    struct internal_token_info *internal_keyinfo = NULL;
-    /* struct fb_data_t *fb_data = (struct fb_data_t *)data; */
-
-    internal_keyinfo = kmalloc(sizeof(struct internal_token_info),GFP_KERNEL);
-    if (internal_keyinfo == NULL) {
-        return -ENOMEM;
-    }
-    /* MOD_INC_USE_COUNT; */
-    if(count > sizeof(procfs_info_t))
-        len = sizeof(procfs_info_t);
-    else
-        len = count;
-    DBG_TRACE(DBG_LEVEL_DEBUG, "reading %ld len from userspace", count);
-    if(copy_from_user(u_keyinfo.buffer, buffer, len)) {
-        /* MOD_DEC_USE_COUNT; */
-        return -EFAULT;
-    }
-    u_keyinfo.buffer[len] = '\0';
-    DBG_TRACE(DBG_LEVEL_NOTICE, "reading: vendor: %x, product: %x, serial: %s",
-	      u_keyinfo.info.idVendor,
-              u_keyinfo.info.idProduct,
-              u_keyinfo.info.idSerialNumber);
-
-    /* copy information to internal_keyinfo */
-    internal_keyinfo->info.idVendor = u_keyinfo.info.idVendor;
-    internal_keyinfo->info.idProduct = u_keyinfo.info.idProduct;
-    strcpy(internal_keyinfo->info.idSerialNumber, u_keyinfo.info.idSerialNumber);
-
-    if ((u_keyinfo.info.keyflags & USBWALL_KEY_ADD)) {
-      DBG_TRACE(DBG_LEVEL_INFO, "°%d adding key %s to whitelist", nb_element, u_keyinfo.info.idSerialNumber);
-      //key_add(&(internal_keyinfo));
-      key_add(internal_keyinfo);
-      nb_element++;
-    } else if ((u_keyinfo.info.keyflags & USBWALL_KEY_DEL)) {
-      DBG_TRACE(DBG_LEVEL_INFO, "deleting key %s to whitelist", u_keyinfo.info.idSerialNumber);
-      //key_del(&(internal_keyinfo));
-      key_del(internal_keyinfo);
-      nb_element--;
-    }
-
-    /* MOD_DEC_USE_COUNT; */
-
-    return len;
-}
 
 /*!
  ** \brief usbwall_status_read
@@ -240,10 +175,6 @@ int usbwall_proc_init()
     if (usbwalldir == NULL) {
 	goto fail_proc_mkdir;
     }
-    usbwallkeyctrl = create_proc_entry("key_ctrl", 0600, usbwalldir);
-    if (usbwallkeyctrl == NULL) {
-	goto fail_proc_entry;
-    }
     usbwallstatus = create_proc_entry("status", 0400, usbwalldir);
     if (usbwallstatus == NULL) {
 	goto fail_proc_entry_2;
@@ -254,7 +185,6 @@ int usbwall_proc_init()
     }
 
 
-    usbwallkeyctrl->write_proc = usbwall_keyctrl_write;
     usbwallstatus->read_proc = usbwall_status_read;
     usbwallrelease->read_proc = usbwall_release_read;
     return 0;
@@ -264,7 +194,6 @@ fail_proc_entry_3:
     remove_proc_entry("release", usbwalldir);
 fail_proc_entry_2:
     remove_proc_entry("status", usbwalldir);
-fail_proc_entry:
     remove_proc_entry("usbwall", NULL);
 fail_proc_mkdir:
     return 1;
@@ -277,6 +206,5 @@ void usbwall_proc_release()
 {
     remove_proc_entry("release", usbwalldir);
     remove_proc_entry("status", usbwalldir);
-    remove_proc_entry("key_ctrl", usbwalldir);
     remove_proc_entry("usbwall", NULL);
 }
