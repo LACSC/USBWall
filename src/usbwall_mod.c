@@ -53,6 +53,18 @@ MODULE_DESCRIPTION ("Module for USB mass-storage device filtering");
 MODULE_LICENSE ("GPL");
 MODULE_VERSION (USBWALL_MODVERSION);
 
+
+enum authmode {
+  USBWALL_AUTH_EVENT = 0,
+  USBWALL_AUTH_LIST,
+  USBWALL_AUTH_MAX
+};
+
+short authmode = USBWALL_AUTH_LIST;
+
+module_param(authmode, short, 0640);
+MODULE_PARM_DESC(authmode, "Module device authentication method: 0 for event based (ask for userspace answer), 1 for list based (internal device list)");
+
 /**
  * \struct usb_device_id usbwall_id_table []
  *
@@ -141,6 +153,10 @@ static struct usb_driver usbwall_driver = {
  */
 static int __init usbwall_init (void)
 {
+  if (authmode >= USBWALL_AUTH_MAX) {
+    DBG_TRACE(DBG_LEVEL_ERROR, "invalid authmode %d", authmode);
+    return -EINVAL;
+  }
   /* USB driver register*/
   usbwall_register = 0;
   usbwall_register = usb_register (&usbwall_driver);
