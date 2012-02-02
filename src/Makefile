@@ -1,6 +1,7 @@
 TODEL	     = tags *~ .*.swp *.o *~ core .depend .*.cmd *.ko *.mod.c modules.order Module.symvers
 RM	     = rm
 INSTALL	     = install
+DEPMOD       = depmod
 RMFLAGS      = -rf
 SOURCES      = usbwall_mod.c \
 	       procfs_iface.c \
@@ -23,6 +24,7 @@ modules:
 modules_install:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
 	$(INSTALL) -m 0644 usbwall.h /usr/include/linux/usb
+	$(DEPMOD) -a
 
 clean:
 	$(RM) $(RMFLAGS) $(OBJS) $(TODEL)

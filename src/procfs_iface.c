@@ -79,7 +79,7 @@ static int usbwall_keyctrl_write(struct file* file,
 {
     int len;
     procfs_info_t u_keyinfo;
-   
+
     struct internal_token_info *internal_keyinfo = NULL;
     /* struct fb_data_t *fb_data = (struct fb_data_t *)data; */
 

@@ -40,6 +40,14 @@
 
 #define USBWALL_MODVERSION "0.2.1"
 
+/*
+** define the ioctl magic number
+*/
+# define USBWALL_IOC_MAGIC		'u'
+
+# define USBWALL_ADDKEY		_IOW(USBWALL_IOC_MAGIC, 0, long) /* pointer */
+# define USBWALL_DELKEY		_IOW(USBWALL_IOC_MAGIC, 1, long) /* pointer */
+
 enum keyflags
 {
   USBWALL_KEY_ADD = 0x1 << 0,
