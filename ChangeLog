@@ -1,3 +1,27 @@
+commit af90e8149862e79762cf8af223aea505ef9e7d00
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 17:12:04 2012 +0100
+
+    corrected invalid kfree on ioctl error cases.
+
+commit ebb1054246b56e292669d1e100952cecb9284a2f
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 15:49:17 2012 +0100
+
+    support for usbwall dev done.
+
+commit 6e1079770f2f0868e4a5b9533a706c3f0f44cbcf
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 15:15:41 2012 +0100
+
+    add proper AUTHORS, INSTALL and README file
+
+commit 505f899ca032d77281b53b28e17bb17d702eeee8
+Author: Philippe Thierry <thierry@ece.fr>
+Date:   Thu Feb 2 11:21:04 2012 +0100
+
+    updated ChangeLog
+
 commit 0967739b1d27c93ccbe7d7c206b1dd61d522b266
 Author: Philippe Thierry <thierry@ece.fr>
 Date:   Thu Feb 2 11:20:25 2012 +0100
