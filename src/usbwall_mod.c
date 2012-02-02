@@ -43,6 +43,7 @@
 #include "keylist.h"
 #include "procfs_iface.h"
 #include "keylist_info.h"
+#include "usbwall_chrdev.h"
 
 /* Module informations */
 MODULE_AUTHOR ("David FERNANDES");
@@ -146,6 +147,7 @@ static int __init usbwall_init (void)
     DBG_TRACE (DBG_LEVEL_ERROR, "Registering usb driver failed, error : %d", usbwall_register);
   }
   usbwall_proc_init();
+  usbwall_chrdev_init();
   keylist_init();
   DBG_TRACE (DBG_LEVEL_INFO, "module loaded");
   return usbwall_register;
@@ -159,6 +161,7 @@ static int __init usbwall_init (void)
 static void __exit usbwall_exit (void)
 {
   keylist_release();
+  usbwall_chrdev_exit();
   usbwall_proc_release();
   /* USB driver unregister*/
   usb_deregister (&usbwall_driver);

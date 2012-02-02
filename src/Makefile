@@ -4,6 +4,7 @@ INSTALL	     = install
 RMFLAGS      = -rf
 SOURCES      = usbwall_mod.c \
 	       procfs_iface.c \
+	       usbwall_chrdev.c \
 	       keylist.c \
 	       trace.c
 
