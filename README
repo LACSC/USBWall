@@ -1,38 +1,35 @@
-USB Wall -- kernel-based security module for USB mass-storage device filtering 
+The USBWall project
+-------------------
 
------------ Description -----------
-USB Wall, is a kind of firewall for USB storage device like pen drive and external hard drive. 
-It concerns Linux PC and is developed for network administrators. 
-Thereby, this software can control the access to USB device in order to restrict their use. 
-Indeed, all storage device whose identifier is not accepted by the IT department, will not be allowed  to communicate with the user (i.e. the user couldn’t open the key to read, write or execute any files in this device).
+The goal of the usbwall project is to add a complete USB mass-storage filtering system in the Linux
+kernel.
+Through filtering we would like to support:
 
-Moreover, an interface, used by network administrators, will be added to control the list of allowed keys, also called white list. It permits to register the key’s identifiers in a file which contains a list of authorized key’s identifiers.
+1) USB Storage white-listing, permitting to allow only specific pre-registered usb devices. Other
+devices are simply unaccessible from any userspace tools such as mount.
+2) USB Storage fine grain filtering, specifying which action can be done for each allowed device,
+such as read, write, execute, setu(g)id root execution, etc. This function needs to be integrated
+in a complete security suite which is not supported by now.
+3) Simple listing management through graphical user interface.
+4) High level API definition through a userspace library, allowing to update or modify the module
+interface without impacting userspace software. Only the abstraction library has to be updated.
 
-There are two main objectives:
+The USBWall module
+------------------
+This is the source repository of the USBWall module.
+This sources contain only the Linux kernel module. The library and the currently being implemented
+applications can be found on github:
+https://github.com/LACSC/
 
-   > To allow, restrict or forbid the access of a pen drive on Linux PC.
+The module currently support whitelisting through usb mass storage devices injection. By now, there
+is no automatic key injection at startup. This should be done by the user using the startup scripts
+of his distribution
 
-   > To monitor all events about USB activity on the PC Linux as a connection or a 
-     registration of the pen drive, actions between the storage device and PC,…
+Limitations
+-----------
+In order to be functionnal, the usb_storage module has to be compiled as a module (not statically)
+this is the case in all major distributions for desktop), and the usbwall module has to be loaded
+_before_ usb_storage. In the other case, the usb_storage module will take the hand on the device
+first and the filtering will not be supported.
 
------------ State advancement -----------
-The module can detect any mass storage devices and indentify them why their product id, vendor id and serial number (thanks to these three identifiers, we can confirm (so sure) the USB mass-storage device's identity.
-
-To use this module first you have to remove the usb_storage module.
-
-The "create white list" to be able to add mass storage ids in the white list.
-The "load white list" program allows to communicate the white list from the user space to the kernel space.
-
-The communication between user space and kernel space is made by a procfs.
-
-The abstract library is functional.
-
------------ In progress ----------- 
-Create a graphical interface.
-
------------ Next work ----------- 
-Implemented network element
-
------------ Reference -----------
-ldd3 - Linux Device Drivers 3rd
-
+This limitation will be corrected in the future.

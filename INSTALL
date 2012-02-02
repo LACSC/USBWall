@@ -1,47 +1,35 @@
-                                 USBWall
+Installing the USBWall module
+-----------------------------
 
------------ Requirements before installing -----------
+I Native install
+----------------
 
-Get kernel sources : kernel.org or distributor's kernels sources package
-Developed with 
-   > Linux Kernel : version 2.6.32-34
-   > Distribution : Ubuntu 10.04 LTS (Lucid Lynx) 
+You need to have at least the linux-headers package (or equivalent) installed in your system.
+Check that /lib/module/`uname -r`/build link exists.
 
------------ Installation -----------
-0- Open a linux console
+The native install using standard module compilation:
 
-1- Compile the module :
-	> go to the "usball" repertory : "cd .../usbwall"
-        > run the compilation : "make"
+- enter the usbwall module root directory
+- run make modules
+- using sudo, run make modules_install
 
-2- Insert the module (whit root permission) :
-        > go to the "src" directory : "cd .../usbwall/src"
-        > insert the module : "insmod usbwall.ko"
+The module is then compiled, integrated to the current kernel modules directory and the depmod has
+been done so that you can modprobe it.
 
-2- Compile & configure the library :
-	> go to the "usball_lib" repertory : "cd .../usbwall_lib"
-        > rnu configuration : "./configure"
-        > run the compilation : "make"
-        > install : sudo make install
+- remove usb_storage module using rmmod
+- load the usbwall module using modprobe
 
-3- Compile test applications 
-        > go to the "usbwall_testapp" directory : cd ../usbwall_testapp
-        > run compilation : "make"
+The usbwall module support the dbglevel option (see modinfo). By default, there is no debug
+messages. You can specify the verbosity when mdprobing the module.
 
-4- Create white list : run the create white list application
-        > go to the "src" directory : cd ../usbwall_testapp/src
-        > run application : "./load_white_liste"
+Cross-compilation
+-----------------
+Even if the module targets standard x86 & x86_64 native compilation, it is possible to
+cross-compile it using the following command:
 
-5- Charge white list : run the load white list application
-        > run application : "./load_white_liste"
-        
+ARCH=<target_arch> CROSS_COMPILE=<gcc-cross-prefix> make modules
 
-(a)- To see usbwall kernel messages 
-        > use : dmesg | grep usbwall  
+example:
+ARCH=arm CROSS_COMPILE=armeabi-linux-gnu- make modules
 
-(b)- To remove the usb_storage module (whit root permission) :
-	> rmmod usb_storage
-
-(c)- To remove the usbwall module (whit root permission) :
-	> rmmod usbwall 
-
+You then need to copy the usbwall.ko file into your target and insmod it.

@@ -19,7 +19,7 @@ ifeq ($(KERNELRELEASE),)
 all : modules
 
 modules:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) ARCH=x86 modules
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 
 modules_install:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
