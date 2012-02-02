@@ -145,16 +145,16 @@ usbwall_chrdev_ioctl(
   DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl");
   return 0;
 
+err_badarg:
+  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error FAULT");
+  kfree(internal_keyinfo);
+  return -EFAULT;
 err_cmd:
   DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error INVAL");
   return -EINVAL;
 err_nomem:
   DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error NOMEM");
   return -ENOMEM;
-err_badarg:
-  DBG_TRACE(DBG_LEVEL_DEBUG, "Leaving ioctl with error FAULT");
-  kfree(internal_keyinfo);
-  return -EFAULT;
 }
 
 static int
