@@ -1,0 +1,5 @@
+﻿Event mode support:
+This mode is based on a new Netlink class definition, allowing authentication requests from the
+module and authentication replies from the listening userspace process (e.g. pam).
+The module then send an authentication request when a usb storage device is being connected and
+wait for the reply to decide what to do.
